@@ -1,11 +1,14 @@
 import asyncio
 import os
-from aiosu.v2.client import Client
-from aiosu.models.beatmap import Beatmapset, BeatmapsetSearchResponse
 
+from aiosu.v2.client import Client
+from app.models import AIBeatmapsetSearchResponse
 from dotenv import load_dotenv
+from app.utils.logging import logging_factory
+from aiosu.exceptions import APIException, RefreshTokenExpiredError
 
 load_dotenv()
+logger = logging_factory(__name__)
 
 limit = (10, 1)
 client = Client(
@@ -18,25 +21,20 @@ client = Client(
 async def beatmap_search(query: str, ):
     try:
         response = await client.search_beatmapsets(query=query)
-        beatmaps = response.beatmapsets
-        '''
-        Notes for implementation:
-        beatmaps is a list of Beatmapset objects
-        to-do: 
-        - Make a model with descriptions so the agent knows the ins and outs of beatmapset (Will have to do the same for
-        beatmap and the other nested models) using inheritance, just add descriptions
-        - map the raw data to my descriptive model and dump that as return
-        
-        example:
-        raw = beatmapset.model_dump(mode="json", by_alias=True)
-        result = BeatmapsetResult.model_validate(raw)
-        return result.model_dump(mode="json", by_alias=True, exclude_none=True)
-        '''
+        raw_data = response.model_dump(mode="json", by_alias=True)
+        result = AIBeatmapsetSearchResponse.model_validate(raw_data)
 
         await client.aclose()
-    except:
+        return result
+    except APIException as e:
+        logger.error(f"api call failed: {str(e)}")
         await client.aclose()
         raise
-
-
-asyncio.run(beatmap_search(query="miku"))
+    except RefreshTokenExpiredError as e:
+        logger.error(f"expired token: {str(e)}")
+        await client.aclose()
+        raise
+    except Exception as e:
+        logger.error(f"error occured: {str(e)}")
+        await client.aclose()
+        raise
