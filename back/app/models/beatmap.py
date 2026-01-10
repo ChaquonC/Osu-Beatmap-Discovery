@@ -1,8 +1,5 @@
-import datetime
-
-from aiosu.models import Beatmapset, BeatmapCovers, BeatmapRankStatus, BeatmapHype, BeatmapGenre, \
-    BeatmapDescription, BeatmapLanguage, Beatmap, Gamemode, BeatmapsetSearchResponse
-from pydantic import Field
+from datetime import datetime
+from pydantic import Field, BaseModel
 from typing import Optional
 
 '''
@@ -10,7 +7,7 @@ Models Optimized for AI Comprehension
 '''
 
 
-class AIBeatmapCovers(BeatmapCovers):
+class AIBeatmapCovers(BaseModel):
     cover: str = Field(description="Beatmap cover image asset")
     card: str = Field(description="Beatmap card image asset")
     list: str = Field(description="Beatmap list image asset")
@@ -21,36 +18,36 @@ class AIBeatmapCovers(BeatmapCovers):
     slimcover_2_x: Optional[str] = Field(default=None, alias="slimcover@2x")
 
 
-class AIBeatmapHype(BeatmapHype):
+class AIBeatmapHype(BaseModel):
     current: int = Field(description="Number of hypes the beatmap has")
     required: int = Field(description="Number of hypes necessary for ranked consideration")
 
 
-class AIBeatmapGenre(BeatmapGenre):
+class AIBeatmapGenre(BaseModel):
     name: str = Field(description="Genre of the song")
     id: int = Field(description="Id associated with the genre")
 
 
-class AIBeatmapDescription(BeatmapDescription):
+class AIBeatmapDescription(BaseModel):
     description: str = Field(description="Description of beatmap")
 
 
-class AIBeatmapLanguage(BeatmapLanguage):
+class AIBeatmapLanguage(BaseModel):
     name: str = Field(description="Name of the language")
     id: int = Field(description="Id associated with the language")
 
 
-class AIBeatmap(Beatmap):
+class AIBeatmap(BaseModel):
     id: int = Field(description="Unique id for beatmap")
     url: str = Field(description="Link to osu webpage for beatmap")
-    mode: Gamemode = Field(
+    mode: int = Field(
         description="Integer value denoting game mode for the beatmap; 0 = standard, 1 = taiko, 2 = Catch the Beat (CTB), 3 = Mania")
     beatmapset_id: int = Field(description="Unique id for beatmap set")
     difficulty_rating: float = Field(description="Difficulty star rating for beatmap")
-    status: BeatmapRankStatus = Field(
+    status: int = Field(
         description="Integer value denoting a beatmap set's status; -2 = Graveyard, -1 = WIP, 0 = Pending, 1 = Ranked, 2 = Approved, 3 = Qualified, 4 = Loved")
     total_length: int = Field(description="The length of the song in seconds")
-    user_id: str = Field(description="User id of the mapper")
+    user_id: int = Field(description="User id of the mapper")
     version: str = Field(description="Name of the beatmap difficulty")
     accuracy: Optional[float] = Field(
         description="Number indicating how accurate timing needs to be; 0 = least accurate, 10+ = most accurate")
@@ -61,7 +58,7 @@ class AIBeatmap(Beatmap):
     convert: Optional[bool] = Field(description="Whether a beatmap is a convert")
     count_circles: Optional[int] = Field(description="How many circles are in the beatmap")
     count_sliders: Optional[int] = Field(description="How many sliders are in the beatmap")
-    counter_spinners: Optional[int] = Field(description="How many spinners are in the beatmap")
+    count_spinners: Optional[int] = Field(description="How many spinners are in the beatmap")
     drain: Optional[float] = Field(
         description="Number indicating how fast health will drain; 0 = slowest, 10+ = fastest")
     hit_length: Optional[int] = Field(description="The length of active playtime in seconds")
@@ -71,30 +68,29 @@ class AIBeatmap(Beatmap):
     play_count: Optional[int] = Field(alias="playcount",
                                       description="Number of times the map has been played (non-unique)")
     max_combo: Optional[int] = Field(description="Maximum combo possible")
-    count_objects: Optional[int] = Field(description="total count of all objects")
 
 
-class AIBeatmapset(Beatmapset):
+class AIBeatmapset(BaseModel):
     id: int = Field(description="Unique id for beatmap set")
-    artist: int = Field(description="Song artist name (romanized)")
-    artist_unicode: int = Field(description="Song artist name in orignal language")
+    artist: str = Field(description="Song artist name (romanized)")
+    artist_unicode: str = Field(description="Song artist name in orignal language")
     covers: AIBeatmapCovers = Field(description="Information for the cover image of a beatmap set")
     creator: str = Field(description="Username of the beatmap set's creator")
     favourite_count: int = Field(description="Number of favorites the map has")
     play_count: int = Field(alias="playcount", description="Number of times the map has been played (non-unique)")
     preview_url: str = Field(description="Song preview url (leads to audio file)")
     source: str = Field(description="The song's source material for example, if the song came from a game")
-    status: BeatmapRankStatus = Field(
+    status: int = Field(
         description="integer value denoting a beatmap set's status; -2 = Graveyard, -1 = WIP, 0 = Pending, 1 = Ranked, 2 = Approved, 3 = Qualified, 4 = Loved")
     title: str = Field(description="Song title (romanized_")
     title_unicode: str = Field(description="Song title in original language")
-    user_id: str = Field(description="User id of the mapper")
+    user_id: int = Field(description="User id of the mapper")
     video: bool = Field(description="Tells whether there is a video")
     nsfw: Optional[bool] = Field(description="Tells if the content is NSFW")
     hype: Optional[AIBeatmapHype] = Field(
         description="Information on a beatmap set's hype status (related to ranking process")
     bpm: Optional[float] = Field(description="Song beats per minute")
-    is_scorable: Optional[bool] = Field(description="Whether scores can be submitted on the beatmap set")
+    is_scoreable: Optional[bool] = Field(description="Whether scores can be submitted on the beatmap set")
     last_updated: Optional[datetime] = Field(description="Last time the beatmap set was updated")
     ranked_date: Optional[datetime] = Field(description="When the beatmap set was ranked")
     storyboard: Optional[bool] = Field(description="If the map has a storyboard")
@@ -108,5 +104,5 @@ class AIBeatmapset(Beatmapset):
         description="Beatmaps converted to other game modes automatically (not the best don't recommend as first choice)")
 
 
-class AIBeatmapsetSearchResponse(BeatmapsetSearchResponse):
+class AIBeatmapsetSearchResponse(BaseModel):
     beatmapsets: list[AIBeatmapset] = Field(description="List of beatmap sets")
