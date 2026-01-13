@@ -50,24 +50,51 @@ class AIBeatmap(BaseModel):
     user_id: int = Field(description="User id of the mapper")
     version: str = Field(description="Name of the beatmap difficulty")
     accuracy: Optional[float] = Field(
+        default=None,
         description="Number indicating how accurate timing needs to be; 0 = least accurate, 10+ = most accurate")
     ar: Optional[float] = Field(
+        default=None,
         description="Number indicating how long you have to react to the circle appearing on screen before it disappears; 0 = slowest, 10+ = fastest")
-    cs: Optional[float] = Field(description="Number indicating how big the circles are; 0 = Biggest, 10+ = smallest")
-    bpm: Optional[float] = Field(description="song beats per minute")
-    convert: Optional[bool] = Field(description="Whether a beatmap is a convert")
-    count_circles: Optional[int] = Field(description="How many circles are in the beatmap")
-    count_sliders: Optional[int] = Field(description="How many sliders are in the beatmap")
-    count_spinners: Optional[int] = Field(description="How many spinners are in the beatmap")
+    cs: Optional[float] = Field(
+        default=None,
+        description="Number indicating how big the circles are; 0 = Biggest, 10+ = smallest")
+    bpm: Optional[float] = Field(
+        default=None,
+        description="song beats per minute")
+    convert: Optional[bool] = Field(
+        default=None,
+        description="Whether a beatmap is a convert")
+    count_circles: Optional[int] = Field(
+        default=None,
+        description="How many circles are in the beatmap")
+    count_sliders: Optional[int] = Field(
+        default=None,
+        description="How many sliders are in the beatmap")
+    count_spinners: Optional[int] = Field(
+        default=None,
+        description="How many spinners are in the beatmap")
     drain: Optional[float] = Field(
+        default=None,
         description="Number indicating how fast health will drain; 0 = slowest, 10+ = fastest")
-    hit_length: Optional[int] = Field(description="The length of active playtime in seconds")
-    is_scoreable: Optional[bool] = Field(description="Whether or not scores can be submitted on the beatmap")
-    last_updated: Optional[datetime] = Field(description="Last time the beatmap set was updated")
-    passcount: Optional[int] = Field(description="Number of times the map has been passed (non-unique")
-    play_count: Optional[int] = Field(alias="playcount",
-                                      description="Number of times the map has been played (non-unique)")
-    max_combo: Optional[int] = Field(description="Maximum combo possible")
+    hit_length: Optional[int] = Field(
+        default=None,
+        description="The length of active playtime in seconds")
+    is_scoreable: Optional[bool] = Field(
+        default=None,
+        description="Whether or not scores can be submitted on the beatmap")
+    last_updated: Optional[datetime] = Field(
+        default=None,
+        description="Last time the beatmap set was updated")
+    passcount: Optional[int] = Field(
+        default=None,
+        description="Number of times the map has been passed (non-unique")
+    play_count: Optional[int] = Field(
+        default=None,
+        alias="playcount",
+        description="Number of times the map has been played (non-unique)")
+    max_combo: Optional[int] = Field(
+        default=None,
+        description="Maximum combo possible")
 
 
 class AIBeatmapset(BaseModel):
@@ -86,21 +113,47 @@ class AIBeatmapset(BaseModel):
     title_unicode: str = Field(description="Song title in original language")
     user_id: int = Field(description="User id of the mapper")
     video: bool = Field(description="Tells whether there is a video")
-    nsfw: Optional[bool] = Field(description="Tells if the content is NSFW")
+    nsfw: Optional[bool] = Field(
+        default=None,
+        description="Tells if the content is NSFW")
     hype: Optional[AIBeatmapHype] = Field(
+        default=None,
         description="Information on a beatmap set's hype status (related to ranking process")
-    bpm: Optional[float] = Field(description="Song beats per minute")
-    is_scoreable: Optional[bool] = Field(description="Whether scores can be submitted on the beatmap set")
-    last_updated: Optional[datetime] = Field(description="Last time the beatmap set was updated")
-    ranked_date: Optional[datetime] = Field(description="When the beatmap set was ranked")
-    storyboard: Optional[bool] = Field(description="If the map has a storyboard")
-    submitted_date: Optional[datetime] = Field(description="When the beatmap set was submitted")
-    tags: Optional[str] = Field(description="Descriptive tags of beatmap set and song attributes")
-    description: Optional[AIBeatmapDescription] = Field(description="Beatmap set description")
-    genre: Optional[AIBeatmapGenre] = Field(description="Genre of the song")
-    language: Optional[AIBeatmapLanguage] = Field(description="Language of the song")
-    beatmaps: Optional[list[AIBeatmap]] = Field(description="Beatmaps belonging to the set")
+    bpm: Optional[float] = Field(
+        default=None,
+        description="Song beats per minute")
+    is_scoreable: Optional[bool] = Field(
+        default=None,
+        description="Whether scores can be submitted on the beatmap set")
+    last_updated: Optional[datetime] = Field(
+        default=None,
+        description="Last time the beatmap set was updated")
+    ranked_date: Optional[datetime] = Field(
+        default=None,
+        description="When the beatmap set was ranked")
+    storyboard: Optional[bool] = Field(
+        default=None,
+        description="If the map has a storyboard")
+    submitted_date: Optional[datetime] = Field(
+        default=None,
+        description="When the beatmap set was submitted")
+    tags: Optional[str] = Field(
+        default=None,
+        description="Descriptive tags of beatmap set and song attributes")
+    description: Optional[AIBeatmapDescription] = Field(
+        default=None,
+        description="Beatmap set description")
+    genre: Optional[AIBeatmapGenre] = Field(
+        default=None,
+        description="Genre of the song")
+    language: Optional[AIBeatmapLanguage] = Field(
+        default=None,
+        description="Language of the song")
+    beatmaps: Optional[list[AIBeatmap]] = Field(
+        default=None,
+        description="Beatmaps belonging to the set")
     converts: Optional[list[AIBeatmap]] = Field(
+        default=None,
         description="Beatmaps converted to other game modes automatically (not the best don't recommend as first choice)")
 
 
