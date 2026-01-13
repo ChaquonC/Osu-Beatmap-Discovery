@@ -6,7 +6,6 @@ from app.utils.tool_utils import ok, fail
 
 mcp = FastMCP(name="Beatmap-Discovery-Tools")
 
-
 @mcp.tool(
     name="Beatmap_Search",
     description="Returns a list of beatmap sets resulting from query and filters",
@@ -15,6 +14,7 @@ mcp = FastMCP(name="Beatmap-Discovery-Tools")
 )
 async def beatmap_search_tool(search: BeatmapSearchQuery) -> dict:
     try:
+
         result = await beatmap_search(search)
         raw_data = result.model_dump(mode="json", by_alias=True, exclude_none=True)
 
@@ -27,6 +27,4 @@ async def beatmap_search_tool(search: BeatmapSearchQuery) -> dict:
     except ToolError as e:
         return fail(code=e.code, message=str(e), data=e.data)
 
-
-if __name__ == "__main__":
-    mcp.run(transport="stdio")
+mcp_app = mcp.http_app()
