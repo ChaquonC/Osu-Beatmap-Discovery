@@ -27,4 +27,3 @@ async def beatmap_search_tool(search: BeatmapSearchQuery) -> dict:
     except ToolError as e:
         return fail(code=e.code, message=str(e), data=e.data)
 
-mcp_app = mcp.http_app()

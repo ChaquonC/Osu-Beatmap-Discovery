@@ -1,6 +1,6 @@
 from app.models import AIBeatmapsetSearchResponse, BeatmapSearchQuery
 from dotenv import load_dotenv
-from app.utils import ToolError, InvalidRequest, logging_factory
+from app.utils import ToolError, InvalidRequest, logging_factory, ok, fail
 from aiosu.exceptions import APIException, RefreshTokenExpiredError
 from app.utils.resources import osu_client
 
@@ -30,3 +30,19 @@ async def beatmap_search(search: BeatmapSearchQuery) -> AIBeatmapsetSearchRespon
     except Exception as e:
         logger.info(f"error occured: {str(e)}")
         raise ToolError(message=str(e))
+
+
+async def beatmap_search_tool(search: BeatmapSearchQuery) -> dict:
+    try:
+
+        result = await beatmap_search(search)
+        raw_data = result.model_dump(mode="json", by_alias=True, exclude_none=True)
+
+        if len(raw_data) == 0:
+            return fail(code=404, message="Search resulted in no beatmap sets returned")
+
+        return ok(raw_data)
+    except InvalidRequest as e:
+        return fail(code=500, message=f"Invalid Request: {str(e)}")
+    except ToolError as e:
+        return fail(code=e.code, message=str(e), data=e.data)

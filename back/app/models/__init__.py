@@ -2,3 +2,5 @@ from .beatmap import AIBeatmap, AIBeatmapCovers, AIBeatmapHype, AIBeatmapLanguag
     AIBeatmapset, AIBeatmapsetSearchResponse
 
 from .query import BeatmapSearchQuery
+
+from .tools import Tool
