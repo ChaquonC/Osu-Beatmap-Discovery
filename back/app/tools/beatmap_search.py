@@ -1,10 +1,8 @@
 from app.models import AIBeatmapsetSearchResponse, BeatmapSearchQuery
-from dotenv import load_dotenv
 from app.utils import ToolError, InvalidRequest, logging_factory, ok, fail
 from aiosu.exceptions import APIException, RefreshTokenExpiredError
 from app.utils.resources import osu_client
 
-load_dotenv()
 logger = logging_factory(__name__)
 
 
@@ -43,6 +41,6 @@ async def beatmap_search_tool(search: BeatmapSearchQuery) -> dict:
 
         return ok(raw_data)
     except InvalidRequest as e:
-        return fail(code=500, message=f"Invalid Request: {str(e)}")
-    except ToolError as e:
-        return fail(code=e.code, message=str(e), data=e.data)
+        raise ToolError(code=400, message=f"Invalid Request: {str(e)}")
+    except Exception as e:
+        raise ToolError(code=500, message=str(e))

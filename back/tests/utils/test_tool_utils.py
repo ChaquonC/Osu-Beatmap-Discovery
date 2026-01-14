@@ -1,86 +1,66 @@
 import pytest
 import pytest_asyncio
 
-from typing import Any
-
-from app.utils import InvalidRequest
 from app.utils.tool_utils import ok, fail
 
 
-def is_subdict(small: dict, big: dict) -> bool:
-    return all(k in big and big[k] == v for k, v in small.items())
+def test_ok_with_simple_dict():
+    data = {"a": 1, "b": "test"}
+
+    result = ok(data)
+
+    assert result == {
+        "ok": True,
+        "data": data,
+    }
 
 
-@pytest.mark.asyncio
-@pytest.mark.parametrize(
-    "data,kwargs",
-    [
-        ({1: 2}, {}),
-        ({1: "fdfd"}, {"all": "crave"}),
-        ({"shark": "tank"}, {}),
-        ({(1, 2): "play"}, {"a": 1}),
-        ({}, {"a": 1, "b": 2}),
-        ({"a": 1, "b": 2}, {"a": 1, "b": 2, "c": 3, "d": [], "e": "blah"}),
-        ({"data": "totally_real_data"}, {"number": 10000000000})
-    ]
-)
-async def test_ok(data: dict, kwargs: dict[str, Any]):
-    response = ok(data=data, **kwargs)
-    assert isinstance(response["content"], dict)
-    assert response["content"]["type"] == "json"
-    assert isinstance(response["content"]["json"], dict)
-    assert response["content"]["json"]["ok"] == True
-    json = response["content"]["json"]
-    assert len(json) >= 2
-    if data is not None:
-        assert is_subdict(data, json)
-    assert is_subdict(kwargs, json)
+def test_ok_with_empty_dict():
+    data = {}
+
+    result = ok(data)
+
+    assert result["ok"] is True
+    assert result["data"] == {}
 
 
-@pytest.mark.asyncio
-@pytest.mark.parametrize(
-    "data,kwargs",
-    [
-        ({"ok": 2}, {"totally_real_data": "real_data"}),
-        ({"totally_real_data": "real_data"}, {"ok": "we_ok"}),
-        ({"ok": 1}, {"ok": 2})
-    ]
-)
-async def test_ok_error(data: dict, kwargs: dict[str, Any]):
-    with pytest.raises(InvalidRequest):
-        ok(data=data, **kwargs)
+def test_ok_preserves_nested_data():
+    data = {
+        "items": [
+            {"id": 1},
+            {"id": 2}
+        ],
+        "meta": {"count": 2}
+    }
 
-def test_fail_basic_shape():
-    resp = fail(400, "bad request")
+    result = ok(data)
 
-    assert resp["content"]["type"] == "json"
-    payload = resp["content"]["json"]
-
-    assert payload["ok"] is False
-    assert payload["code"] == 400
-    assert payload["message"] == "bad request"
+    assert result["data"]["items"][0]["id"] == 1
+    assert result["data"]["meta"]["count"] == 2
 
 
-def test_fail_includes_extra_fields():
-    resp = fail(404, "not found", resource="user", user_id=123)
+def test_fail_basic_error():
+    result = fail(400, "Bad request")
 
-    payload = resp["content"]["json"]
-    assert payload["ok"] is False
-    assert payload["code"] == 404
-    assert payload["message"] == "not found"
-    assert payload["resource"] == "user"
-    assert payload["user_id"] == 123
-
-
-def test_fail_rejects_reserved_ok_key():
-    with pytest.raises(InvalidRequest, match="reserved key"):
-        fail(500, "server error", ok=True)
+    assert result == {
+        "ok": False,
+        "error": {
+            "code": 400,
+            "message": "Bad request",
+        }
+    }
 
 
-@pytest.mark.parametrize(
-    "bad_ok_value",
-    [True, False, 1, "yes", None, {"x": 1}],
-)
-def test_fail_rejects_reserved_ok_key_any_value(bad_ok_value: Any):
-    with pytest.raises(InvalidRequest):
-        fail(400, "bad", ok=bad_ok_value)
+def test_fail_with_different_code():
+    result = fail(500, "Internal error")
+
+    assert result["ok"] is False
+    assert result["error"]["code"] == 500
+    assert result["error"]["message"] == "Internal error"
+
+
+def test_fail_message_is_string():
+    message = "Something went wrong"
+    result = fail(404, message)
+
+    assert isinstance(result["error"]["message"], str)

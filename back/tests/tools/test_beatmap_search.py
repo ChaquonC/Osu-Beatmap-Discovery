@@ -32,7 +32,7 @@ class FakeResponse:
 
 @pytest.mark.asyncio
 async def test_beatmap_search_success_calls_client_with_normalized_params(mod, fake_client, monkeypatch):
-    monkeypatch.setattr(mod, "client", fake_client)
+    monkeypatch.setattr(mod, "osu_client", fake_client)
 
     fake_resp = FakeResponse(raw_payload={"beatmapsets": []})
     fake_client.search_beatmapsets.return_value = fake_resp
@@ -70,7 +70,7 @@ async def test_beatmap_search_success_calls_client_with_normalized_params(mod, f
 
 @pytest.mark.asyncio
 async def test_beatmap_search_empty_query_raises_toolerror(mod, fake_client, monkeypatch):
-    monkeypatch.setattr(mod, "client", fake_client)
+    monkeypatch.setattr(mod, "osu_client", fake_client)
 
     # query is required by model, but empty string is still a valid str => hits your guard
     search = mod.BeatmapSearchQuery(query="")
@@ -84,7 +84,7 @@ async def test_beatmap_search_empty_query_raises_toolerror(mod, fake_client, mon
 
 @pytest.mark.asyncio
 async def test_beatmap_search_api_exception_maps_to_toolerror(mod, fake_client, monkeypatch):
-    monkeypatch.setattr(mod, "client", fake_client)
+    monkeypatch.setattr(mod, "osu_client", fake_client)
 
     fake_client.search_beatmapsets.side_effect = mod.APIException("nope")
     search = mod.BeatmapSearchQuery(query="anything")
@@ -97,7 +97,7 @@ async def test_beatmap_search_api_exception_maps_to_toolerror(mod, fake_client, 
 
 @pytest.mark.asyncio
 async def test_beatmap_search_refresh_token_expired_maps_to_toolerror(mod, fake_client, monkeypatch):
-    monkeypatch.setattr(mod, "client", fake_client)
+    monkeypatch.setattr(mod, "osu_client", fake_client)
 
     fake_client.search_beatmapsets.side_effect = mod.RefreshTokenExpiredError("expired")
     search = mod.BeatmapSearchQuery(query="anything")
@@ -110,7 +110,7 @@ async def test_beatmap_search_refresh_token_expired_maps_to_toolerror(mod, fake_
 
 @pytest.mark.asyncio
 async def test_beatmap_search_unexpected_exception_message_becomes_toolerror_message(mod, fake_client, monkeypatch):
-    monkeypatch.setattr(mod, "client", fake_client)
+    monkeypatch.setattr(mod, "osu_client", fake_client)
 
     fake_client.search_beatmapsets.side_effect = RuntimeError("boom")
     search = mod.BeatmapSearchQuery(query="anything")
