@@ -35,3 +35,10 @@ class BeatmapSearchQuery(BaseModel):
     only_featured_artists: Optional[bool] = Field(
         default=False,
         description="Whether to only include beatmap sets with only featured artists, defaults to False")
+
+
+class ClientRequest(BaseModel):
+    prompt: str
+    model_type: str
+    thinking_level: str
+    existing_conversation: list

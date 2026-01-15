@@ -4,6 +4,7 @@ from aiosu.v2 import Client
 
 osu_client: Optional[Client] = None
 
+
 def init_osu_client() -> Client:
     global osu_client
     if osu_client is None:
@@ -15,6 +16,7 @@ def init_osu_client() -> Client:
             limiter=limit,
         )
     return osu_client
+
 
 async def close_osu_client():
     global osu_client

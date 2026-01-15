@@ -1,5 +1,6 @@
 from typing import Any
 
+
 def ok(data: dict):
     return {
         "ok": True,

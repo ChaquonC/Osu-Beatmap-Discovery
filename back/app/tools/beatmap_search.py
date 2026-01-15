@@ -12,11 +12,15 @@ async def beatmap_search(search: BeatmapSearchQuery) -> AIBeatmapsetSearchRespon
         if not search.query:
             raise InvalidRequest("Search must include 'query'")
 
+        logger.info(f"Looking for beatmaps; query: f{search.query}")
+
         normalized_search = search.model_dump(exclude_none=True)
 
         response = await osu_client.search_beatmapsets(**normalized_search)
         raw_data = response.model_dump(mode="json", by_alias=True)
         result = AIBeatmapsetSearchResponse.model_validate(raw_data)
+
+        logger.info(f"retrieved data from osu api")
 
         return result
     except APIException as e:
@@ -32,15 +36,20 @@ async def beatmap_search(search: BeatmapSearchQuery) -> AIBeatmapsetSearchRespon
 
 async def beatmap_search_tool(search: BeatmapSearchQuery) -> dict:
     try:
+        logger.info("starting beatmap search tool call")
 
         result = await beatmap_search(search)
         raw_data = result.model_dump(mode="json", by_alias=True, exclude_none=True)
 
         if len(raw_data) == 0:
+            logger.info("beatmap search tool returned nothing")
             return fail(code=404, message="Search resulted in no beatmap sets returned")
 
+        logger.info("beatmap search tool successful")
         return ok(raw_data)
     except InvalidRequest as e:
+        logger.info("beatmap search tool failed")
         raise ToolError(code=400, message=f"Invalid Request: {str(e)}")
     except Exception as e:
+        logger.info("beatmap search tool failed")
         raise ToolError(code=500, message=str(e))
