@@ -1,7 +1,6 @@
 from typing import Any
 from app.core.companies.template import BaseLLMAdapter
 from anthropic import AsyncAnthropic, types
-
 from app.models import Tool, LLMActionType, LLMResponse
 
 

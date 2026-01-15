@@ -1,7 +1,6 @@
 from typing import Any
 from app.core.companies.template import BaseLLMAdapter
-from openai import AsyncOpenAI, types
-
+from openai import AsyncOpenAI
 from app.models import Tool, LLMResponse, LLMActionType
 
 

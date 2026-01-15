@@ -10,7 +10,7 @@ class BaseLLMAdapter(ABC):
         raise NotImplementedError
 
     def parse_response(self, response: Any) -> LLMResponse:
-        """Converts LLM response into standardized dictionary"""
+        """Converts LLM response into standardized response object"""
         raise NotImplementedError
 
     @abstractmethod

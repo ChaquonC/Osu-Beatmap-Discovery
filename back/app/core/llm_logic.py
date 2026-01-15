@@ -1,5 +1,3 @@
-from unicodedata import normalize
-
 from app.models import ClientRequest, LLMActionType
 from app.utils import InvalidRequest, logging_factory
 from app.core.llm_proxy import LLMProxy
@@ -53,9 +51,7 @@ async def call_agent(request: ClientRequest):
         # should probably validate final response again
 
         return final_response
-
-
-
-
     except InvalidRequest:
         raise
+    except Exception as e:
+        logger.info(f"error occured: {str(e)}")
