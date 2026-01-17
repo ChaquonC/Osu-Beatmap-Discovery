@@ -2,6 +2,7 @@ from app.models import ClientRequest, LLMActionType
 from app.utils import InvalidRequest, logging_factory
 from app.core.llm_proxy import LLMProxy
 from app.tools.tool_registry import tool_registry
+from typing import Any
 
 logger = logging_factory(__name__)
 
@@ -17,7 +18,7 @@ def agent_levels(agent_code: str):
     return switch[agent_code]
 
 
-async def call_agent(request: ClientRequest):
+async def call_agent(request: ClientRequest) -> list[dict[str, Any]]:
     try:
         logger.info(f"running {request.model_type} agent at '{request.thinking_level}' thinking level")
         client = LLMProxy(company=request.model_type, tools=tool_registry)
@@ -37,6 +38,7 @@ async def call_agent(request: ClientRequest):
             for action in normalized_response.output:
                 if action["type"] == LLMActionType.TOOL_CALL:
                     # implement later
+
                     pass
                 elif action["type"] == LLMActionType.OUTPUT_TEXT:
                     # implement later
@@ -45,12 +47,8 @@ async def call_agent(request: ClientRequest):
                     # implement later
                     pass
 
-        final_response = conversation[-1]
-
-        logger.info("returning agent final response")
-        # should probably validate final response again
-
-        return final_response
+        logger.info("returning conversation")
+        return conversation
     except InvalidRequest:
         raise
     except Exception as e:

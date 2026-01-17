@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, Any
 
 """
 Query models for API based tools
@@ -41,4 +41,4 @@ class ClientRequest(BaseModel):
     prompt: str
     model_type: str
     thinking_level: str
-    existing_conversation: list
+    existing_conversation: Optional[list[dict[str, Any]]]
