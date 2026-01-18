@@ -34,9 +34,11 @@ async def beatmap_search(search: BeatmapSearchQuery) -> AIBeatmapsetSearchRespon
         raise ToolError(message=str(e))
 
 
-async def beatmap_search_tool(search: BeatmapSearchQuery) -> dict:
+async def beatmap_search_tool(search: dict) -> dict:
     try:
         logger.info("starting beatmap search tool call")
+
+        search = BeatmapSearchQuery(**search)
 
         result = await beatmap_search(search)
         raw_data = result.model_dump(mode="json", by_alias=True, exclude_none=True)

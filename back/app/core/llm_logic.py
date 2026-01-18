@@ -1,4 +1,4 @@
-from app.models import ClientRequest, LLMActionType
+from app.models import ClientRequest
 from app.utils import InvalidRequest, logging_factory
 from app.core.llm_proxy import LLMProxy
 from app.tools.tool_registry import tool_registry
@@ -23,7 +23,10 @@ async def call_agent(request: ClientRequest) -> list[dict[str, Any]]:
         logger.info(f"running {request.model_type} agent at '{request.thinking_level}' thinking level")
         client = LLMProxy(company=request.model_type, tools=tool_registry)
 
-        conversation = request.existing_conversation or [{"role": "user", "content": request.prompt}]
+        if request.existing_conversation:
+            conversation = request.existing_conversation
+        else:
+            conversation = [{"role": "user", "content": request.prompt}]
 
         agent_turns = agent_levels(request.thinking_level)
 
@@ -33,19 +36,17 @@ async def call_agent(request: ClientRequest) -> list[dict[str, Any]]:
 
             normalized_response = client.parse_response(response)
 
-            conversation.append(normalized_response.context_to_add)
-
             for action in normalized_response.output:
-                if action["type"] == LLMActionType.TOOL_CALL:
-                    # implement later
-
-                    pass
-                elif action["type"] == LLMActionType.OUTPUT_TEXT:
-                    # implement later
-                    pass
-                elif action["type"] == LLMActionType.STRUCTURED_OUTPUT:
-                    # implement later
-                    pass
+                if action["type"] == client.action_type.TOOL_CALL:
+                    task = {"role": "assistant", "content": f"assistant called {action["name"]} tool"}
+                    logger.info(f"running {task}")
+                    conversation.append(task)
+                    tool_call = client.parse_tool_call(action)
+                    tool_info = tool_registry.tools.get(tool_call.name)
+                    tool_response = await tool_info.fn(**tool_call.inputs)
+                    conversation.append({"role": "developer", "content": tool_response})
+                elif action["type"] == client.action_type.OUTPUT_TEXT:
+                    conversation.append({"role": "assistant", "content": action["text"]})
 
         logger.info("returning conversation")
         return conversation
@@ -53,3 +54,4 @@ async def call_agent(request: ClientRequest) -> list[dict[str, Any]]:
         raise
     except Exception as e:
         logger.info(f"error occured: {str(e)}")
+        raise e

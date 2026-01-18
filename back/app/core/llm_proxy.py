@@ -6,6 +6,7 @@ from app.core.companies.google import GoogleAdapter
 from app.core.companies.anthropic import AnthropicAdapter
 from dotenv import load_dotenv
 from typing import Any
+from app.models import LLMResponse, ToolCall
 
 load_dotenv()
 
@@ -19,9 +20,13 @@ class LLMProxy:
         }
         self.adapter = switch[company]
         self.tools = tools
+        self.action_type = self.adapter.action_type
 
-    async def send_prompt(self, inputs: list[dict[str, str]]):
+    async def send_prompt(self, inputs: list[dict[str, str]]) -> Any:
         await self.adapter.send(tools=self.tools, input_list=inputs)
 
-    def parse_response(self, response: dict[str, Any]):
+    def parse_response(self, response) -> LLMResponse:
         return self.adapter.parse_response(response)
+
+    def parse_tool_call(self, arguments: dict[str, str]) -> ToolCall:
+        return self.adapter.parse_tool_call(arguments)

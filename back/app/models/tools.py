@@ -14,16 +14,23 @@ class ToolRegistry(BaseModel):
     tools: dict[str, Tool]
 
 
-class LLMActionType(Enum):
-    TOOL_CALL = auto()
-    OUTPUT_TEXT = auto()
-    STRUCTURED_OUTPUT = auto()
+class OpenAIActionType(Enum):
+    TOOL_CALL = "function_call"
+    OUTPUT_TEXT = "message"
+
+class AnthropicActionType(Enum):
+    TOOL_CALL = "tool_use"
+    OUTPUT_TEXT = "text"
 
 class LLMResponse(BaseModel):
     id: str
     output: list[dict]
     model: str
-    role: str
     usage: dict[str, Any]
-    context_to_add: Optional[dict[str, str]] = None
+    status: Optional[str] = None
+    error: Optional[str] = None
+
+class ToolCall(BaseModel):
+    name: str
+    inputs: dict
 

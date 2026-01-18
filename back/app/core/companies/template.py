@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any
-from app.models import Tool, LLMResponse
+from app.models import Tool, LLMResponse, ToolCall
 
 
 class BaseLLMAdapter(ABC):
@@ -16,4 +16,8 @@ class BaseLLMAdapter(ABC):
     @abstractmethod
     async def send(self, tools: dict[str, Tool], input_list: list[dict[str, str]]) -> Any:
         """Send prompt + tools to the provider and return response."""
+        raise NotImplementedError
+
+    def parse_tool_call(self, arguments: dict[str, str]) -> ToolCall:
+        """Converts specific tool call output to universal tool call object."""
         raise NotImplementedError

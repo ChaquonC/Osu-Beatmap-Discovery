@@ -1,7 +1,7 @@
 from typing import Any
 from google.genai import Client, types
 from app.core.companies.template import BaseLLMAdapter
-from app.models import Tool, LLMResponse, LLMActionType
+from app.models import Tool, LLMResponse
 
 
 class GoogleAdapter(BaseLLMAdapter):
@@ -37,5 +37,5 @@ class GoogleAdapter(BaseLLMAdapter):
         return response
 
     def parse_response(self, response: types.GenerateContentResponse) -> LLMResponse:
-        # implement later
+        # will revisit, google documentation is confusing
         pass
