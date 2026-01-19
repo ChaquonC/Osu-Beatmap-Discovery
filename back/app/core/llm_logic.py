@@ -21,7 +21,7 @@ def agent_levels(agent_code: str):
 async def call_agent(request: ClientRequest) -> list[dict[str, Any]]:
     try:
         logger.info(f"running {request.model_type} agent at '{request.thinking_level}' thinking level")
-        client = LLMProxy(company=request.model_type, tools=tool_registry)
+        client = LLMProxy(company=request.model_type, tools=tool_registry.tools)
 
         if request.existing_conversation:
             conversation = request.existing_conversation

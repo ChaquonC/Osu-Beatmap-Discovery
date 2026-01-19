@@ -20,7 +20,7 @@ class OpenAIAdapter(BaseLLMAdapter):
                 "type": "function",
                 "name": tool.name,
                 "description": tool.description,
-                "parameters": tool.input_modelmodel_json_schema()
+                "parameters": tool.input_model.model_json_schema()
             }
             for tool in tools.values()
         ]
