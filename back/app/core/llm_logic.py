@@ -10,9 +10,9 @@ logger = logging_factory(__name__)
 def agent_levels(agent_code: str):
     switch = {
         "thinking_on_a_budget": 1,
-        "basic": 3,
-        "hes_cooking": 5,
-        "the_thinker": 8
+        "basic": 2,
+        "hes_cooking": 3,
+        "the_thinker": 4
     }
     # I want it to throw an error in case future Chaquon messes up :)
     return switch[agent_code]

@@ -23,7 +23,7 @@ class LLMProxy:
         self.action_type = self.adapter.action_type
 
     async def send_prompt(self, inputs: list[dict[str, str]]) -> Any:
-        await self.adapter.send(tools=self.tools, input_list=inputs)
+        return await self.adapter.send(tools=self.tools, input_list=inputs)
 
     def parse_response(self, response) -> LLMResponse:
         return self.adapter.parse_response(response)
