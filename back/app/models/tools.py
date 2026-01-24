@@ -34,3 +34,9 @@ class ToolCall(BaseModel):
     name: str
     inputs: dict
 
+class ConversationEntry(BaseModel):
+    role: str
+    content: str | dict
+
+class Conversation(BaseModel):
+    conversation_entries: list[ConversationEntry]

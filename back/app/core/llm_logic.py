@@ -1,4 +1,4 @@
-from app.models import ClientRequest
+from app.models import ClientRequest, Conversation
 from app.utils import InvalidRequest, logging_factory
 from app.core.llm_proxy import LLMProxy
 from app.tools.tool_registry import tool_registry
@@ -18,7 +18,7 @@ def agent_levels(agent_code: str):
     return switch[agent_code]
 
 
-async def call_agent(request: ClientRequest) -> list[dict[str, Any]]:
+async def call_agent(request: ClientRequest) -> Conversation:
     try:
         logger.info(f"running {request.model_type} agent at '{request.thinking_level}' thinking level")
         client = LLMProxy(company=request.model_type, tools=tool_registry.tools)
@@ -49,7 +49,8 @@ async def call_agent(request: ClientRequest) -> list[dict[str, Any]]:
                     conversation.append({"role": "assistant", "content": action["text"]})
 
         logger.info("returning conversation")
-        return conversation
+        formatted_conversation = Conversation.model_validate(conversation)
+        return formatted_conversation
     except InvalidRequest:
         raise
     except Exception as e:
