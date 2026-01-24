@@ -18,9 +18,11 @@ class OpenAIActionType(Enum):
     TOOL_CALL = "function_call"
     OUTPUT_TEXT = "message"
 
+
 class AnthropicActionType(Enum):
     TOOL_CALL = "tool_use"
     OUTPUT_TEXT = "text"
+
 
 class LLMResponse(BaseModel):
     id: str
@@ -30,13 +32,16 @@ class LLMResponse(BaseModel):
     status: Optional[str] = None
     error: Optional[str] = None
 
+
 class ToolCall(BaseModel):
     name: str
     inputs: dict
 
+
 class ConversationEntry(BaseModel):
     role: str
     content: str | dict
+
 
 class Conversation(BaseModel):
     conversation_entries: list[ConversationEntry]
