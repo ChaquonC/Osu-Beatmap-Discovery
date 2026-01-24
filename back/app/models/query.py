@@ -41,4 +41,4 @@ class ClientRequest(BaseModel):
     prompt: str
     model_type: str
     thinking_level: str
-    existing_conversation: Optional[list[dict[str, Any]]]
+    existing_conversation: Optional[list[dict[str, Any]]] = None

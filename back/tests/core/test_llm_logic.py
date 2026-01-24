@@ -31,8 +31,3 @@ def test_agent_levels_valid_codes(agent_code, expected):
 def test_agent_levels_invalid_string_raises_keyerror(bad_code):
     with pytest.raises(KeyError):
         agent_levels(bad_code)
-
-
-@pytest.mark.asyncio
-async def test_call_agent():
-    pass
