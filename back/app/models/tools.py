@@ -40,7 +40,7 @@ class ToolCall(BaseModel):
 
 class ConversationEntry(BaseModel):
     role: str
-    content: str | dict
+    content: str
 
 
 class Conversation(BaseModel):
