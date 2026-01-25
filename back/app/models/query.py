@@ -38,7 +38,6 @@ class BeatmapSearchQuery(BaseModel):
 
 
 class ClientRequest(BaseModel):
-    prompt: str
+    conversation: list[dict[str, Any]]
     model_type: str
     thinking_level: str
-    existing_conversation: Optional[list[dict[str, Any]]] = None

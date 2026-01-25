@@ -20,7 +20,7 @@ async def call_agent(request: ClientRequest):
     try:
         client_request = ClientRequest.model_validate(request)
 
-        logger.info(f"calling agent with the prompt {client_request.prompt} with {client_request.model_type} agent")
+        logger.info(f"calling agent with the prompt {client_request.conversation[-1].get("content")} with {client_request.model_type} agent")
 
         conversation = await call_agent(client_request)
 

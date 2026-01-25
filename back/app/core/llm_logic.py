@@ -23,10 +23,7 @@ async def call_agent(request: ClientRequest) -> Conversation:
         logger.info(f"running {request.model_type} agent at '{request.thinking_level}' thinking level")
         client = LLMProxy(company=request.model_type, tools=tool_registry.tools)
 
-        if request.existing_conversation:
-            conversation = request.existing_conversation
-        else:
-            conversation = [{"role": "user", "content": request.prompt}]
+        conversation = request.conversation
 
         agent_turns = agent_levels(request.thinking_level)
 
