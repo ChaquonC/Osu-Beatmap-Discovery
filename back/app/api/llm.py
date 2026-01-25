@@ -16,7 +16,7 @@ llm_router = APIRouter(prefix="/api/v1/llm", tags=["LLM Endpoints"])
                  response_model=APIResponseModel,
                  dependencies=[],
                  )
-async def call_agent(request: ClientRequest):
+async def agent_endpoint(request: ClientRequest):
     try:
         client_request = ClientRequest.model_validate(request)
 
