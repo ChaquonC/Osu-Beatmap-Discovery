@@ -1,4 +1,4 @@
-from app.models import ClientRequest, Conversation, Message, LLMResponse
+from app.models import ClientRequest, Conversation, Message
 from app.utils import InvalidRequest, logging_factory
 from app.core.llm_proxy import LLMProxy
 from app.tools.tool_registry import tool_registry
