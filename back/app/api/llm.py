@@ -24,7 +24,12 @@ async def agent_endpoint(request: ClientRequest):
 
         conversation = await call_agent(client_request)
 
-        return conversation.model_dump()
+        conversation_data = conversation.model_dump()
+
+        return APIResponseModel(
+            ok=True,
+            data=conversation_data.get("conversation")
+        )
     except Exception as e:
         logger.info(f"error occurred: {str(e)}")
 

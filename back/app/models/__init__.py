@@ -3,7 +3,7 @@ from .beatmap import AIBeatmap, AIBeatmapCovers, AIBeatmapHype, AIBeatmapLanguag
 
 from .query import BeatmapSearchQuery, ClientRequest
 
-from .tools import Tool, ToolRegistry, LLMResponse, OpenAIActionType, AnthropicActionType, ToolCall, ConversationEntry, \
-    Conversation
+from .tools import Tool, ToolRegistry, LLMResponse, OpenAIActionType, AnthropicActionType, ToolCall, Conversation, \
+    Message
 
 from .api import APIResponseModel

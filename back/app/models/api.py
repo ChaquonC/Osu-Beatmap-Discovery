@@ -3,5 +3,5 @@ from typing import Any
 
 
 class APIResponseModel(BaseModel):
-    status_code: int
+    ok: bool
     data: Any

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from typing import Callable, Any, Optional
-from enum import Enum, auto
+from typing import Callable, Any, Optional, Literal
+from enum import Enum
 
 
 class Tool(BaseModel):
@@ -37,11 +37,9 @@ class ToolCall(BaseModel):
     name: str
     inputs: dict
 
-
-class ConversationEntry(BaseModel):
-    role: str
+class Message(BaseModel):
+    role: Literal["user", "assistant", "system", "tool"]
     content: str
 
-
 class Conversation(BaseModel):
-    conversation_entries: list[ConversationEntry]
+    conversation: list[Message]
